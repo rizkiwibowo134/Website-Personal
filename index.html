@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jual Barang Modern</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff9c4; /* soft yellow */
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: #b71c1c; /* deep red for contrast */
+      margin-bottom: 0.3rem;
+    }
+    header p {
+      font-size: 1.2rem;
+      color: #5d4037;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .product-card {
+      background: #f48fb1; /* pink shade */
+      border-radius: 16px;
+      box-shadow: 0 8px 15px rgba(244, 143, 177, 0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease;
+      cursor: default;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 20px rgba(244, 143, 177, 0.5);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 3px solid #ce93d8;
+    }
+
+    .product-info {
+      padding: 1rem 1.2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .product-name {
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: #880e4f;
+      text-align: center;
+    }
+    .product-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #d81b60;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .buy-btn {
+      background-color: #ce93d8;
+      color: #4a148c;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 0;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 9px rgba(206, 147, 216, 0.4);
+      transition: background-color 0.3s ease;
+      align-self: center;
+    }
+    .buy-btn:hover {
+      background-color: #ba68c8;
+      color: #38006b;
+      box-shadow: 0 6px 12px rgba(186, 104, 200, 0.6);
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: #fff3e0;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 16px 32px rgba(217, 166, 45, 0.3);
+      position: relative;
+    }
+    .modal h2 {
+      margin-top: 0;
+      color: #f57c00;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .modal label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      color: #e65100;
+    }
+    .modal input[type="text"],
+    .modal input[type="number"] {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      margin-bottom: 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #ffcc80;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    .modal input[type="text"]:focus,
+    .modal input[type="number"]:focus {
+      outline: none;
+      border-color: #fb8c00;
+      box-shadow: 0 0 8px #fb8c00;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .modal button {
+      background: #fb8c00;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.75rem 1.6rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1.05rem;
+    }
+    .modal button:hover {
+      background: #ef6c00;
+    }
+    .modal .close-btn {
+      background: #bdbdbd;
+      color: #424242;
+      flex-grow: 1;
+    }
+    .modal .close-btn:hover {
+      background: #9e9e9e;
+    }
+
+    /* Fixed WhatsApp contact button */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25d366;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      box-shadow: 0 4px 8px rgba(37, 211, 102, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 1100;
+      transition: background-color 0.3s ease;
+      font-size: 32px;
+      text-decoration: none;
+      user-select: none;
+    }
+    .whatsapp-float:hover {
+      background-color: #1ebe57;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TOKO SALSA</h1>
+    <p>Temukan album dan gantungan kunci terbaik dengan harga menarik!</p>
+  </header>
+
+  <main class="products" id="products-list" aria-label="Daftar Produk">
+    <!-- Products inserted by JS -->
+  </main>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal" role="document">
+      <h2 id="modal-title">Beli Produk</h2>
+      <form id="buy-form">
+        <input type="hidden" id="product-name" name="product-name" />
+        <label for="customer-name">Nama Customer:</label>
+        <input type="text" id="customer-name" name="customer-name" required autocomplete="off" placeholder="Masukkan nama Anda" />
+        <label for="quantity">Jumlah Beli:</label>
+        <input type="number" id="quantity" name="quantity" required min="1" value="1" />
+        <div class="modal-buttons">
+          <button type="submit">Kirim WhatsApp</button>
+          <button type="button" class="close-btn" id="close-modal">Batal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/6285705764892" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Hubungi Kami via WhatsApp" id="whatsapp-button">
+    &#128222;
+  </a>
+
+  <script>
+    const products = [
+      {
+        name: "album 1",
+        img: "produk/album1.jpg",
+        price: "Rp20.000"
+      },
+      {
+        name: "album 2",
+        img: "produk/album2.jpeg",
+        price: "Rp35.000"
+      },
+      {
+        name: "album 3",
+        img: "produk/album3.jpeg",
+        price: "Rp20.000"
+      },
+      {
+        name: "gantungan kunci",
+        img: "produk/gantungan kunci.jpg",
+        price: "Rp10.000"
+      },
+      {
+        name: "fotokopi,cetak foto,print,laminating",
+        img: "produk/sapi fotokopi.jpg",
+        price: "silahkan ketik yg ingin dipesan beserta nama"
+      }
+    ];
+
+    const sellerPhoneNumber = '6285705764892';
+
+    function createProductCard(product) {
+      const card = document.createElement('article');
+      card.className = 'product-card';
+
+      const img = document.createElement('img');
+      img.className = 'product-img';
+      img.src = product.img;
+      img.alt = product.name;
+
+      const info = document.createElement('div');
+      info.className = 'product-info';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'product-name';
+      nameEl.textContent = product.name;
+
+      const priceEl = document.createElement('div');
+      priceEl.className = 'product-price';
+      priceEl.textContent = product.price;
+
+      const btn = document.createElement('button');
+      btn.className = 'buy-btn';
+      btn.textContent = 'Beli';
+      btn.addEventListener('click', () => {
+        openModal(product.name);
+      });
+
+      info.appendChild(nameEl);
+      info.appendChild(priceEl);
+      info.appendChild(btn);
+
+      card.appendChild(img);
+      card.appendChild(info);
+
+      return card;
+    }
+
+    function openModal(productName) {
+      const modalOverlay = document.getElementById('modal-overlay');
+      modalOverlay.style.display = 'flex';
+      document.getElementById('product-name').value = productName;
+      document.getElementById('customer-name').value = '';
+      document.getElementById('quantity').value = 1;
+      document.getElementById('customer-name').focus();
+    }
+
+    function closeModal() {
+      const modalOverlay = document.getElementById('modal-overlay');
+      modalOverlay.style.display = 'none';
+    }
+
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+      if(e.target === this) closeModal();
+    });
+
+    document.getElementById('buy-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const product = document.getElementById('product-name').value;
+      const customer = document.getElementById('customer-name').value.trim();
+      const quantity = parseInt(document.getElementById('quantity').value);
+
+      if (!customer || quantity < 1) {
+        alert('Mohon isi data dengan benar.');
+        return;
+      }
+
+      // Construct WhatsApp message
+      const message = `Halo, saya ingin membeli produk *${product}* sebanyak *${quantity}* unit.\nNama saya: *${customer}*.\nMohon informasi lebih lanjut.`;
+      const url = `https://wa.me/${sellerPhoneNumber}?text=${encodeURIComponent(message)}`;
+
+      // Redirect to WhatsApp
+      window.open(url, '_blank');
+      closeModal();
+    });
+
+    // Insert products to the page
+    const productList = document.getElementById('products-list');
+    products.forEach(prod => {
+      const card = createProductCard(prod);
+      productList.appendChild(card);
+    });
+  </script>
+</body>
+</html>
+
+```
